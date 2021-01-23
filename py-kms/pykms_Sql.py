@@ -23,7 +23,7 @@ def sql_initialize(dbName):
                         con = sqlite3.connect(dbName)
                         cur = con.cursor()
                         cur.execute("CREATE TABLE clients(clientMachineId TEXT, machineName TEXT, applicationId TEXT, skuId TEXT, \
-licenseStatus TEXT, lastRequestTime INTEGER, kmsEpid TEXT, requestCount INTEGER)")
+                                    licenseStatus TEXT, lastRequestTime INTEGER, kmsEpid TEXT, requestCount INTEGER)")
 
                 except sqlite3.Error as e:
                         pretty_printer(log_obj = loggersrv.error, to_exit = True,
@@ -44,27 +44,27 @@ def sql_update(dbName, infoDict):
                         if not data:
                                 # Insert row.
                                 cur.execute("INSERT INTO clients (clientMachineId, machineName, applicationId, \
-skuId, licenseStatus, lastRequestTime, requestCount) VALUES (:clientMachineId, :machineName, :appId, :skuId, :licenseStatus, :requestTime, 1);", infoDict)
+                                            skuId, licenseStatus, lastRequestTime, requestCount) VALUES (:clientMachineId, :machineName, :appId, :skuId, :licenseStatus, :requestTime, 1);", infoDict)
                         else:
                                 # Update data.
                                 if data[1] != infoDict["machineName"]:
                                         cur.execute("UPDATE clients SET machineName=:machineName WHERE \
-clientMachineId=:clientMachineId AND applicationId=:appId;", infoDict)
+                                                    clientMachineId=:clientMachineId AND applicationId=:appId;", infoDict)
                                 if data[2] != infoDict["appId"]:
                                         cur.execute("UPDATE clients SET applicationId=:appId WHERE \
-clientMachineId=:clientMachineId AND applicationId=:appId;", infoDict)
+                                                    clientMachineId=:clientMachineId AND applicationId=:appId;", infoDict)
                                 if data[3] != infoDict["skuId"]:
                                         cur.execute("UPDATE clients SET skuId=:skuId WHERE \
-clientMachineId=:clientMachineId AND applicationId=:appId;", infoDict)
+                                                    clientMachineId=:clientMachineId AND applicationId=:appId;", infoDict)
                                 if data[4] != infoDict["licenseStatus"]:
                                         cur.execute("UPDATE clients SET licenseStatus=:licenseStatus WHERE \
-clientMachineId=:clientMachineId AND applicationId=:appId;", infoDict)
+                                                    clientMachineId=:clientMachineId AND applicationId=:appId;", infoDict)
                                 if data[5] != infoDict["requestTime"]:
                                         cur.execute("UPDATE clients SET lastRequestTime=:requestTime WHERE \
-clientMachineId=:clientMachineId AND applicationId=:appId;", infoDict)
+                                                    clientMachineId=:clientMachineId AND applicationId=:appId;", infoDict)
                                 # Increment requestCount
                                 cur.execute("UPDATE clients SET requestCount=requestCount+1 WHERE \
-clientMachineId=:clientMachineId AND applicationId=:appId;", infoDict)
+                                            clientMachineId=:clientMachineId AND applicationId=:appId;", infoDict)
 
                 except sqlite3.Error as e:
                         pretty_printer(log_obj = loggersrv.error, to_exit = True,
@@ -87,7 +87,7 @@ def sql_update_epid(dbName, kmsRequest, response, appName):
                 try:
                         data = cur.fetchone()
                         cur.execute("UPDATE clients SET kmsEpid=? WHERE \
-clientMachineId=? AND applicationId=?;", (str(response["kmsEpid"].decode('utf-16le')), cmid, appName))
+                                    clientMachineId=? AND applicationId=?;", (str(response["kmsEpid"].decode('utf-16le')), cmid, appName))
 
                 except sqlite3.Error as e:
                         pretty_printer(log_obj = loggersrv.error, to_exit = True,
